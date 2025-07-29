@@ -1,0 +1,202 @@
+[
+  {
+    "text": "परमयम पस क लसट यज डट थ 9 फलई 2023 एनवल वसस क 27,222 रपय पक करत ह",
+    "label": "confirm_payment_details"
+  },
+  {
+    "text": "बट लसट यज डट त आपक पलस क परमयम आप पर नह कर प रह ह",
+    "label": "express_emotional_state"
+  },
+  {
+    "text": "पलस आपक रडयट पड अप सटटरस म कर दग ह",
+    "label": "confirm_identity"
+  },
+  {
+    "text": "त पलस क दबर स रवइट करन क लए",
+    "label": "confirm_identity"
+  },
+  {
+    "text": "आपक ज परमयम प करन ह",
+    "label": "confirm_identity"
+  },
+  {
+    "text": "कलस व प करन ह 62,000 तजक चवल सफर",
+    "label": "provides_policy_details"
+  },
+  {
+    "text": "डइव सपसकरइब take care",
+    "label": "take_care"
+  },
+  {
+    "text": "अगर यह दगर कलक करत ह अगर यह बच मन बहत धनयवद म आप स अचछ दखओ क आप क तरफ स कलन लजट करत ह",
+    "label": "ask_policy_benefits"
+  },
+  {
+    "text": "क आप इस तरफ स मरच करन क लइट स क आप क तरफ स कल दसकनक कर सकत ह",
+    "label": "ask_payment_details"
+  },
+  {
+    "text": "Thank you so much",
+    "label": "thank_you | show_appreciation"
+  },
+  {
+    "text": "नयकत कर और इसक पस ऐस पलस स आपक लए बत कर",
+    "label": "financial_problem"
+  },
+  {
+    "text": "पलस नबर ह C206589794",
+    "label": "agree_to_continue"
+  },
+  {
+    "text": "पलस आपन लज 28 सबटबर 2018 म जस पलस क आपकम 28 सबटबर 2023 क परमम डय ह",
+    "label": "agree_to_continue"
+  },
+  {
+    "text": "शतरर ज टटल आपक ज प करन ह 40,567 रपस प करन ह",
+    "label": "confirm_identity"
+  },
+  {
+    "text": "परमम पमट टरम म आपक ज ह व 12 सल ह और पलसटम 25 सल ह",
+    "label": "provide_policy_details"
+  },
+  {
+    "text": "जन सकत ह पलसटम क ज परमम ह व कब तक प कर दग आप",
+    "label": "confirm_identity"
+  },
+  {
+    "text": "नह प कर पओ",
+    "label": "refuse_to_pay"
+  },
+  {
+    "text": "रसन जन सकत ह कय नह करन चहए आप प",
+    "label": "ask_policy_benefits"
+  },
+  {
+    "text": "पनजयल क लए",
+    "label": "wrong_person"
+  },
+  {
+    "text": "नह कर सकत ह",
+    "label": "refuse_to_pay"
+  },
+  {
+    "text": "अगर आपक बत कर त आपक पलस रगरग मनय ज त अभ घर पर नह ह सर इसक लडक बढ रह ह",
+    "label": "financial_problem"
+  },
+  {
+    "text": "आपक अपडकट कर दश",
+    "label": "confirm_identity"
+  },
+  {
+    "text": "आपक कमत सम क लए धनयवद",
+    "label": "confirm_identity"
+  },
+  {
+    "text": "सटशट क रजटल",
+    "label": "wrong_person"
+  },
+  {
+    "text": "लइक और पलस क रगरग कल क रकशन पर बत कर कन स पलस म आपक ज पलस नह थ न तट स टट एयर लइफ इचरनस पलस",
+    "label": "agree_to_continue"
+  },
+  {
+    "text": "पलस नबर ए वन डबल फक फइन नइम ज द फइन आइम परम अचछ अज बल पलस आपन पजस कय थ 15 सपतबर",
+    "label": "agree_to_continue"
+  },
+  {
+    "text": "2018 म पलस क टरम यह वह 25 सल क फरम ज पकन ह खल 12 सल क लए पकन ह ठक ह ओक पलस",
+    "label": "agree_to_continue"
+  },
+  {
+    "text": "पर दव दख ह वह ह चक 15 सतब द जत ह और टटल दव म तक पशन ह जसक पर आपक लट करन क चरजस लग लग लग लग चन तउन जन पइब अनट एड पटट ह रह ह और करन क पलस क रडस पड पश ह रह",
+    "label": "financial_problem"
+  },
+  {
+    "text": "त आप लए कफरमस डट बतएग ह न म दसत पस नह आत ह त कस कफरमस डट बतऊ आ जग त पहल द म दस दन लग त उन बद ह जएग",
+    "label": "agree_to_continue | confirm_relationship | hesitant"
+  },
+  {
+    "text": "त वह बल जय सब यह सब बत सकत ह अद ज 10 दक य 10 दक",
+    "label": "provide_policy_benefits"
+  },
+  {
+    "text": "फल बक कर द तक म कर फर आपक फर इसक लखर क लए बर बर फल आएग न अगर आप एक बट बतओ त आप एक बट बत दजए न फलग",
+    "label": "agree_to_continue"
+  },
+  {
+    "text": "अधक लग त आपक लए बत कर थ अधक लग त आपक लए बत कर थ",
+    "label": "confirm_identity"
+  },
+  {
+    "text": "परसकरय क लख द आपक पलस ह टट ए आईए लइफ इसरस समरट इनकम पलस पलस नबर ह",
+    "label": "agree_to_continue"
+  },
+  {
+    "text": "आपन पलस लए थ 3 मरच 2021 म डयडट नकल चक ह 3 मरच 2024 म शलन आप तस दर क जम करत ह",
+    "label": "agree_to_continue"
+  },
+  {
+    "text": "एक बर पर मख करन जन जन जन कर ल क आपक दन आपक फरट इपलग स पमट करन क लए पमट कर दग इस म पमट ह जएग म ठक ह",
+    "label": "agree_to_continue"
+  },
+  {
+    "text": "अगर आप इस महन क 20 तरख स दकर टसक अधर कर दग तम क",
+    "label": "ask_policy_benefits"
+  },
+  {
+    "text": "ज रशवन ज आप बल रह ह 20 तरख तक कई इशय नह ह लकन दखय आपक य बतन चहए",
+    "label": "confirm_relationship | policy_bond_missing"
+  },
+  {
+    "text": "10 10 12 12 2025",
+    "label": "confirm_payment_details"
+  },
+  {
+    "text": "ज ह ज ह कयक न दखए आप हमर वलबल कसटमर ह न रजवन ज त हम नह चहत ह इस सलसट म आपक कछ भ लकसन ह अगर आप इस लइन पर म पर दजए और जब भ परमम पर दजए त एक health certificate क फरम रहग व भ",
+    "label": "provide_payment_details | request_payment_link | confirm_payment_date"
+  },
+  {
+    "text": "जब आपक जबर स पल बक करग त आपन ज परमयम प कय रहग उसक आप हम डटलस बत दखग अपडट कर दग बहत स आपक रवइब ह जएग ओक",
+    "label": "financial_problem"
+  },
+  {
+    "text": "ज हलप लइन नबर ह वइट 602 डबल सकस टरबल लइन डबल सकस अगर आपक कछ भ परबलम दग त आप इस नबर पर घट कर सकत ह वपसइक www.tataaiya.com रजसटर मरद मबइल नबर क अलव दसर मरद मबइल नबर",
+    "label": "confirm_identity"
+  },
+  {
+    "text": "पलस लपस सटटस म हन क करण आपक लइफ करज सटप ह चक ह",
+    "label": "confirm_relationship"
+  },
+  {
+    "text": "मन अगल सल पमट दय थ लकन व पमट मर अकउट स रवरस ह गय",
+    "label": "agree_to_continue"
+  },
+  {
+    "text": "ठक ह ठक ह ज",
+    "label": "confirm_identity"
+  },
+  {
+    "text": "त अभ कय करन पडग",
+    "label": "reschedule_call"
+  },
+  {
+    "text": "नकसन म ज रह ह त इसस अचछ हर अपन आप नह कर द",
+    "label": "financial_problem"
+  },
+  {
+    "text": "आप मर पस अपन लए आपक एक बर डटलस आपक बतय त यह पमट आप मतलब रट म करग आप म कलबक",
+    "label": "confirm_identity"
+  },
+  {
+    "text": "आपक पमट करन स लख जएग",
+    "label": "confirm_identity"
+  },
+  {
+    "text": "जएग गगल पर और तट यह वरषण म भज दजए वरषण म कर सकत गगल पर आपक पड अप डउनलड करन नह आत ह",
+    "label": "agree_to_continue"
+  },
+  {
+    "text": "दरजन वल सबस अपन लए आपक डट बरच पर पर बदद करन रह लए आज तन",
+    "label": "agree_to_continue"
+  }
+]

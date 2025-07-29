@@ -1,0 +1,80 @@
+[
+  {
+    "objection": "Markets are too high, I wish to pay when markets fall",
+    "category": "financial_objection",
+    "emotional_tone": "informative",
+    "conditions": [
+      "market_volatility_concern"
+    ],
+    "rebuttal": {
+      "en": "You can invest in our safer debt-oriented funds like Bond Fund with 5.45% returns, and switch to equity later. This ensures your insurance remains active and sum assured stays protected.",
+      "hi": "आप हमारे बॉन्ड फंड जैसे सुरक्षित फंड्स में निवेश कर सकते हैं, जिसकी 5.45% रिटर्न है, और बाद में इक्विटी में स्विच कर सकते हैं। इससे आपका बीमा सक्रिय रहेगा और सम एश्योर्ड भी सुरक्षित रहेगा।",
+      "mr": "तुम्ही आमच्या बॉण्ड फंडमध्ये गुंतवणूक करू शकता ज्याला 5.45% परतावा आहे आणि नंतर इक्विटीत स्विच करू शकता. यामुळे तुमचं इन्शुरन्स सुरू राहील आणि सम एश्योर्डही सुरक्षित राहील."
+    }
+  },
+  {
+    "objection": "I do not want to pay any more premiums as it was sold to me as single premium plan",
+    "category": "product_misunderstanding",
+    "emotional_tone": "clarifying",
+    "conditions": [
+      "mis_sold_complaint"
+    ],
+    "rebuttal": {
+      "en": "Your policy clearly mentions a 7-year premium term. Stopping now moves your funds to a low-yield account and cancels your insurance cover. Continued payment gives better returns and loyalty benefits.",
+      "hi": "आपकी पॉलिसी में 7 साल का प्रीमियम टर्म साफ़ लिखा है। भुगतान रोकने से पैसा कम रिटर्न वाले फंड में चला जाएगा और बीमा कवर भी बंद हो जाएगा। जारी रखने से बेहतर रिटर्न और लॉयल्टी बेनिफिट्स मिलते हैं।",
+      "mr": "तुमच्या पॉलिसीमध्ये 7 वर्षांचा प्रीमियम कालावधी स्पष्ट दिलेला आहे. हप्ता थांबवल्यास तुमचे पैसे कमी परतावा असलेल्या फंडात जातील आणि विमा कव्हरही बंद होईल. हप्ते चालू ठेवल्यास जास्त फायदा आणि लॉयल्टी युनिट्स मिळतात."
+    }
+  },
+  {
+    "objection": "Immediate/Emergency Financial Needs/Medical emergency and hence not paying premiums",
+    "category": "financial_objection",
+    "emotional_tone": "supportive",
+    "conditions": [
+      "policy_age > 5"
+    ],
+    "rebuttal": {
+      "en": "You can use the partial withdrawal feature (if policy is older than 5 years) for emergencies. You can also switch to monthly or EMI payment mode. Let's ensure your cover remains active.",
+      "hi": "अगर आपकी पॉलिसी 5 साल से ज़्यादा पुरानी है तो आप पार्टियल विदड्रॉल का उपयोग कर सकते हैं। आप EMI या मासिक भुगतान पर भी स्विच कर सकते हैं। आपका बीमा चालू रहना ज़रूरी है।",
+      "mr": "जर तुमची पॉलिसी 5 वर्षांहून जुनी असेल तर तुम्ही पार्टियल विड्रॉलचा पर्याय वापरू शकता. तुम्ही मासिक किंवा EMI मोडवर स्विच करू शकता. तुमचं कव्हर चालू ठेवणं गरजेचं आहे."
+    }
+  },
+  {
+    "objection": "Better alternatives available (e.g. Mutual funds/Business)",
+    "category": "financial_objection",
+    "emotional_tone": "comparative",
+    "conditions": [
+      "comparing_returns"
+    ],
+    "rebuttal": {
+      "en": "ULIPs offer tax benefits and insurance cover. Your charges now are only 1.61% with loyalty additions, compared to higher mutual fund expense ratios with no life cover.",
+      "hi": "ULIP प्लान्स टैक्स बेनिफिट्स और बीमा कवर दोनों देते हैं। आपकी पॉलिसी में अब केवल 1.61% चार्जेस लगते हैं और लॉयल्टी बेनिफिट्स भी मिलते हैं, जबकि म्यूचुअल फंड में खर्च ज़्यादा और बीमा नहीं मिलता।",
+      "mr": "ULIP पॉलिसीमध्ये कर सवलती आणि विमा कव्हर मिळतं. तुमच्या पॉलिसीचे चार्जेस आता फक्त 1.61% आहेत आणि लॉयल्टी युनिट्सही मिळतात. म्युच्युअल फंडमध्ये अधिक खर्च होतो आणि विमा मिळत नाही."
+    }
+  },
+  {
+    "objection": "Low/unsatisfactory returns in policy",
+    "category": "performance_concern",
+    "emotional_tone": "reassuring",
+    "conditions": [
+      "returns_doubt"
+    ],
+    "rebuttal": {
+      "en": "You've earned 11.47% effective annual returns so far. Post-lock-in, your charges reduce and you can switch funds anytime to match your risk preference.",
+      "hi": "आपने अब तक 11.47% का प्रभावी वार्षिक रिटर्न कमाया है। लॉक-इन के बाद चार्जेस कम हो जाते हैं और आप अपनी रिस्क प्रोफाइल के अनुसार फंड बदल सकते हैं।",
+      "mr": "तुम्हाला आतापर्यंत 11.47% वार्षिक परतावा मिळाला आहे. लॉक-इननंतर चार्जेस कमी होतात आणि तुम्ही तुमच्या रिस्क प्रोफाइलनुसार फंड बदलू शकता."
+    }
+  },
+  {
+    "objection": "Buying a new policy",
+    "category": "product_misunderstanding",
+    "emotional_tone": "logical",
+    "conditions": [
+      "buying_new_policy"
+    ],
+    "rebuttal": {
+      "en": "New ULIPs have higher upfront charges. Continuing your current policy is more cost-efficient with only 1.61% effective charge and better returns.",
+      "hi": "नई ULIP पॉलिसी में शुरुआत में ज़्यादा चार्जेस लगते हैं। आपकी मौजूदा पॉलिसी में केवल 1.61% चार्ज है और रिटर्न्स भी बेहतर हैं।",
+      "mr": "नवीन ULIP पॉलिसीमध्ये सुरुवातीस जास्त चार्जेस असतात. तुमची सध्याची पॉलिसी फक्त 1.61% चार्जसह अधिक फायदेशीर आहे."
+    }
+  }
+]

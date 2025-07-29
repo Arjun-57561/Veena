@@ -1,0 +1,204 @@
+[
+  {
+    "id": "1.0",
+    "title": "Initial Greeting",
+    "veena_prompt": {
+      "en": "Hello and very Good Morning Sir, May I speak with {policy_holder_name}?",
+      "hi": "नमस्ते, शुभ प्रभात सर। क्या मैं {policy_holder_name} से बात कर सकती हूँ?",
+      "mr": "नमस्कार, शुभ सकाळ सर. मी {policy_holder_name} शी बोलू शकते का?"
+    },
+    "user_expected_intents": ["confirm_identity", "wrong_person", "busy_user"],
+    "next_steps": {
+      "confirm_identity": "1.1",
+      "wrong_person": "1.2",
+      "busy_user": "1.3"
+    }
+  },
+  {
+    "id": "1.1",
+    "title": "Intro Before Policy",
+    "veena_prompt": {
+      "en": "My name is Veena from ValuEnable Life Insurance. Is this the right time to talk about your policy renewal?",
+      "hi": "मेरा नाम वीणा है, ValuEnable Life Insurance से. क्या हम आपकी पॉलिसी के नवीनीकरण के बारे में बात कर सकते हैं?",
+      "mr": "माझं नाव वीणा आहे, ValuEnable Life Insurance कडून. तुमच्या पॉलिसी नूतनीकरणाबद्दल आत्ता बोलू का?"
+    },
+    "user_expected_intents": ["agree_to_continue", "reschedule_call"],
+    "next_steps": {
+      "agree_to_continue": "2.0",
+      "reschedule_call": "3.0"
+    }
+  },
+  {
+    "id": "1.2",
+    "title": "Relationship Check",
+    "veena_prompt": {
+      "en": "May I know your relationship with {policy_holder_name}?",
+      "hi": "{policy_holder_name} से आपका क्या संबंध है?",
+      "mr": "{policy_holder_name} शी तुमचं नातं काय आहे?"
+    },
+    "user_expected_intents": ["confirm_relationship"],
+    "next_steps": {
+      "confirm_relationship": "1.21"
+    }
+  },
+  {
+    "id": "1.21",
+    "title": "Check if they handle the policy",
+    "veena_prompt": {
+      "en": "Do you handle {policy_holder_name}'s policy number {policy_number}?",
+      "hi": "क्या आप {policy_holder_name} की पॉलिसी {policy_number} को संभालते हैं?",
+      "mr": "तुम्ही {policy_holder_name} ची पॉलिसी {policy_number} हाताळता का?"
+    },
+    "user_expected_intents": ["agree_to_continue"],
+    "next_steps": {
+      "agree_to_continue": "2.0"
+    }
+  },
+  {
+    "id": "1.3",
+    "title": "Busy - Offer to Continue or Reschedule",
+    "veena_prompt": {
+      "en": "It will take just 2 minutes. Can we talk now or should I reschedule?",
+      "hi": "सिर्फ 2 मिनट लगेंगे। क्या हम अभी बात कर सकते हैं या कॉल शेड्यूल करें?",
+      "mr": "फक्त २ मिनिट लागतील. आत्ता बोलू का, की कॉल नंतर शेड्यूल करू?"
+    },
+    "user_expected_intents": ["agree_to_continue", "reschedule_call"],
+    "next_steps": {
+      "agree_to_continue": "2.0",
+      "reschedule_call": "3.0"
+    }
+  },
+  {
+    "id": "2.0",
+    "title": "Policy Confirmation",
+    "veena_prompt": {
+      "en": "Let me confirm your policy: {product_name} #{policy_number} started on {policy_start_date}. You've paid {total_premium_paid}. The due amount {outstanding_amount} on {premium_due_date} is still pending. Why haven't you paid yet?",
+      "hi": "आपकी पॉलिसी: {product_name} #{policy_number}, {policy_start_date} को शुरू हुई थी। अब तक आपने {total_premium_paid} भरा है। {premium_due_date} तक {outstanding_amount} बाकी है। आप भुगतान क्यों नहीं कर पाए?",
+      "mr": "तुमची पॉलिसी: {product_name} #{policy_number}, {policy_start_date} पासून सुरु आहे. आतापर्यंत {total_premium_paid} भरले आहे. {premium_due_date} पर्यंत {outstanding_amount} बाकी आहे. का भरले नाही?"
+    },
+    "user_expected_intents": [
+      "payment_status_paid",
+      "financial_problem",
+      "policy_bond_missing",
+      "ask_policy_benefits",
+      "ready_to_pay",
+      "refuse_to_pay"
+    ],
+    "next_steps": {
+      "payment_status_paid": "6.0",
+      "financial_problem": "7.0",
+      "policy_bond_missing": "4.0",
+      "ask_policy_benefits": "2.1",
+      "ready_to_pay": "5.0",
+      "refuse_to_pay": "8.0"
+    }
+  },
+  {
+    "id": "2.1",
+    "title": "Explain Benefits",
+    "veena_prompt": {
+      "en": "You get max allocation, loyalty units, and tax benefits under Sec 80C and 10(10D). Renewals are more profitable than first premiums.",
+      "hi": "आपको अधिक निवेश, लॉयल्टी यूनिट्स और धारा 80C और 10(10D) के तहत टैक्स लाभ मिलता है। रिन्युअल भुगतान पहले वर्ष से अधिक लाभदायक होता है।",
+      "mr": "तुम्हाला अधिक फंड वाटप, लॉयल्टी युनिट्स आणि 80C आणि 10(10D) अंतर्गत कर लाभ मिळतात. नूतनीकरण अधिक फायदेशीर आहे."
+    },
+    "user_expected_intents": ["ready_to_pay", "refuse_to_pay"],
+    "next_steps": {
+      "ready_to_pay": "5.0",
+      "refuse_to_pay": "8.0"
+    }
+  },
+  {
+    "id": "3.0",
+    "title": "Schedule Callback",
+    "veena_prompt": {
+      "en": "Please let me know a better time and date to call you back.",
+      "hi": "कृपया बताएं कि किस दिन और समय कॉल करना सही रहेगा।",
+      "mr": "कृपया सांगा की केव्हा आणि कोणत्या वेळेस कॉल करू?"
+    },
+    "user_expected_intents": ["reschedule_call"],
+    "next_steps": {
+      "reschedule_call": "9.0"
+    }
+  },
+  {
+    "id": "4.0",
+    "title": "Policy Bond Missing",
+    "veena_prompt": {
+      "en": "No worries. Message from your registered mobile on 8806727272 to download the bond.",
+      "hi": "कोई बात नहीं। पॉलिसी बॉन्ड पाने के लिए 8806727272 पर मैसेज करें।",
+      "mr": "हरकत नाही. पॉलिसी बॉन्डसाठी 8806727272 वर मेसेज करा."
+    },
+    "user_expected_intents": ["ready_to_pay", "refuse_to_pay"],
+    "next_steps": {
+      "ready_to_pay": "5.0",
+      "refuse_to_pay": "8.0"
+    }
+  },
+  {
+    "id": "5.0",
+    "title": "Payment Mode & Follow-Up",
+    "veena_prompt": {
+      "en": "How would you like to pay — cash, cheque, or online?",
+      "hi": "आप कैसे भुगतान करना चाहेंगे — नकद, चेक या ऑनलाइन?",
+      "mr": "तुम्हाला कसं पेमेंट करायचं आहे — रोख, चेक की ऑनलाइन?"
+    },
+    "user_expected_intents": ["confirm_payment_date", "request_payment_link"],
+    "next_steps": {
+      "confirm_payment_date": "9.0",
+      "request_payment_link": "9.0"
+    }
+  },
+  {
+    "id": "6.0",
+    "title": "Already Paid",
+    "veena_prompt": {
+      "en": "Thank you. May I know when and how the payment was made?",
+      "hi": "धन्यवाद। कृपया बताएं आपने कब और कैसे भुगतान किया?",
+      "mr": "धन्यवाद. कृपया सांगा की केव्हा आणि कसं पेमेंट केलं?"
+    },
+    "user_expected_intents": ["provide_payment_details"],
+    "next_steps": {
+      "provide_payment_details": "9.0"
+    }
+  },
+  {
+    "id": "7.0",
+    "title": "Financial Problem",
+    "veena_prompt": {
+      "en": "I understand. We offer EMI, monthly, or credit card options. Shall I guide you?",
+      "hi": "मैं समझती हूँ। हम EMI, मासिक या क्रेडिट कार्ड विकल्प देते हैं। क्या मैं सहायता करूँ?",
+      "mr": "माझं समजतं. आम्ही EMI, मासिक किंवा क्रेडिट कार्ड पर्याय देतो. मी मदत करू का?"
+    },
+    "user_expected_intents": ["ready_to_pay", "refuse_to_pay"],
+    "next_steps": {
+      "ready_to_pay": "5.0",
+      "refuse_to_pay": "9.0"
+    }
+  },
+  {
+    "id": "8.0",
+    "title": "Rebuttal Handling",
+    "veena_prompt": {
+      "en": "I understand your concern. Based on your reason, may I explain why it’s still beneficial to continue?",
+      "hi": "मैं आपकी बात समझती हूँ। क्या मैं बताऊँ क्यों पॉलिसी चालू रखना फायदेमंद है?",
+      "mr": "मी तुमचं म्हणणं समजते. मी समजावून सांगू का की पॉलिसी चालू ठेवणं का फायदेशीर आहे?"
+    },
+    "user_expected_intents": ["ready_to_pay", "reschedule_call", "refuse_to_pay"],
+    "next_steps": {
+      "ready_to_pay": "5.0",
+      "reschedule_call": "3.0",
+      "refuse_to_pay": "9.0"
+    }
+  },
+  {
+    "id": "9.0",
+    "title": "Closure",
+    "veena_prompt": {
+      "en": "Thank you for your time. For help, call 1800 209 7272 or WhatsApp 8806 727272.",
+      "hi": "आपके समय के लिए धन्यवाद। सहायता के लिए कॉल करें: 1800 209 7272 या WhatsApp करें 8806 727272।",
+      "mr": "तुमच्या वेळेबद्दल धन्यवाद. मदतीसाठी कॉल करा: 1800 209 7272 किंवा WhatsApp करा 8806 727272."
+    },
+    "user_expected_intents": [],
+    "next_steps": {}
+  }
+]
