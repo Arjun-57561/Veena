@@ -1,23 +1,24 @@
-// lib/api.ts
-
 import type { CustomerData } from "@/hooks/useVoiceAgent";
 
 /**
- * FAKE getWelcome - Simulates backend /api/veena_welcome
+ * Calls real backend /api/veena_welcome endpoint
  */
-export async function getWelcome(lang: string, userId: string, name: string = "Sir/Madam") {
-  // Simulate a short delay like a real backend
-  await new Promise((resolve) => setTimeout(resolve, 500));
+export async function getWelcome(lang: string, userId: string, name: string = "Arjun") {
+  const res = await fetch("http://localhost:5000/api/veena_welcome", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ lang, user_id: userId, full_name: name }),
+  });
 
-  return {
-    response: `Hello ${name}, this is Veena, your assistant. Let's get started.`,
-    audio_url: null, // You can set a demo MP3 path here if needed
-    lang,
-  };
+  if (!res.ok) {
+    throw new Error(`Failed to fetch welcome message: ${res.statusText}`);
+  }
+
+  return res.json();
 }
 
 /**
- * FAKE queryVeena - Simulates backend /api/query_customer
+ * Calls real backend /api/query_customer endpoint
  */
 export async function queryVeena({
   text,
@@ -28,15 +29,19 @@ export async function queryVeena({
   userId: string;
   customerData: CustomerData;
 }) {
-  console.log("Fake query sent:", text, customerData);
+  const res = await fetch("http://localhost:5000/api/query_customer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      text,
+      user_id: userId,
+      customerData,
+    }),
+  });
 
-  // Simulate a delay like network + LLM response
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  if (!res.ok) {
+    throw new Error(`Failed to query Veena: ${res.statusText}`);
+  }
 
-  return {
-    response: `Got it! Based on what you said: "${text}", we'll continue.`,
-    audio_url: null,
-    lang: "en",
-    customerData,
-  };
+  return res.json();
 }

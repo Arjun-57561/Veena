@@ -4,9 +4,9 @@ from sentence_transformers import SentenceTransformer
 from langdetect import detect
 from deep_translator import GoogleTranslator
 from gtts import gTTS
-from groq import Groq
-import uuid
+import subprocess
 import json
+import uuid
 import os
 import faiss
 import time
@@ -15,11 +15,6 @@ from dotenv import load_dotenv
 
 # === CONFIGURATION ===
 load_dotenv()
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-if not GROQ_API_KEY:
-    raise ValueError("Missing GROQ_API_KEY in environment variables")
-
-groq_client = Groq(api_key=GROQ_API_KEY)
 
 LANG_CODES = {
     "en": "en", "hi": "hi", "mr": "hi", "gu": "gu"
@@ -50,24 +45,38 @@ with open("data/rebuttals.json", encoding="utf-8") as f:
 user_state = {}  # memory: {user_id: "1.0"}
 
 # === HELPERS ===
-def detect_lang(text): return detect(text)
-def embed_query(query): return embedder.encode([query])
+def detect_lang(text):
+    return detect(text)
+
+def embed_query(query):
+    return embedder.encode([query])
+
 def retrieve_faq_context(query, k=3):
     query_vec = embed_query(query)
     _, I = index.search(query_vec, k)
     return [faq_texts[i] for i in I[0]]
 
 def generate_llm_response(prompt):
-    response = groq_client.chat.completions.create(
-        model="llama3-70b-8192",
-        messages=[
-            {"role": "system", "content": "You are Veena, a helpful multilingual insurance assistant."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.7,
-        max_tokens=300,
+    system_message = "You are Veena, a helpful multilingual insurance assistant."
+    full_prompt = system_message + "\nUser: " + prompt + "\nAssistant:"
+
+    cmd = ["ollama", "run", "llama3.2"]
+
+    proc = subprocess.Popen(
+        cmd,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding="utf-8",   # handle unicode input/output properly
+        errors="replace"
     )
-    return response.choices[0].message.content
+
+    stdout, stderr = proc.communicate(input=full_prompt)
+
+    if proc.returncode != 0:
+        raise RuntimeError(f"Ollama CLI failed: {stderr}")
+
+    return stdout.strip()
 
 def generate_tts(text, lang):
     filename = f"voice_{uuid.uuid4().hex}.mp3"
@@ -113,14 +122,14 @@ def veena_welcome():
 
     return jsonify({
         "response": prompt,
-        "audio_url": f"http://localhost:5000/api/audio/{audio_path}",  # ✅ FULL URL
+        "audio_url": f"http://localhost:5000/api/audio/{audio_path}",
         "lang": lang
     })
 
 # === MAIN INTERACTION ===
 @app.route("/api/query_customer", methods=["POST"])
 def handle_query():
-    req = request.form if request.content_type.startswith("multipart") else request.json
+    req = request.form if request.content_type and request.content_type.startswith("multipart") else request.json
     user_id = req.get("user_id", "default")
     user_text = req.get("text", "").strip()
 
@@ -165,11 +174,12 @@ Return a JSON object with keys:
 
 Only include fields that are mentioned in the input. Use null or omit for missing values.
 """
-        extraction_raw = generate_llm_response(extract_prompt)
+        extraction_raw = ""
         try:
+            extraction_raw = generate_llm_response(extract_prompt)
             extracted_data = json.loads(extraction_raw)
-        except Exception:
-            print("[LLM Extraction Error]", extraction_raw)
+        except Exception as e:
+            print("[LLM Extraction Error]", extraction_raw, str(e))
             extracted_data = {}
 
         for key, val in extracted_data.items():
@@ -193,18 +203,18 @@ Respond in {lang.upper()} language. Be helpful, natural, and friendly like a hum
 
     return jsonify({
         "response": response,
-        "audio_url": f"http://localhost:5000/api/audio/{audio_path}",  # ✅ FULL URL
+        "audio_url": f"http://localhost:5000/api/audio/{audio_path}",
         "lang": lang,
         "customerData": customer_data
     })
 
-# === AUDIO ===
+# === AUDIO SERVE ===
 @app.route("/api/audio/<filename>")
 def serve_audio(filename):
     path = os.path.abspath(filename)
     print(f"[Serving Audio] {path}")
     return send_file(path, mimetype="audio/mpeg")
 
-# === LAUNCH ===
+# === RUN ===
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
