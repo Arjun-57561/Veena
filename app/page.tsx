@@ -1,31 +1,180 @@
 "use client";
+import { useCallback, useRef, useState } from "react";
 
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { EntityPanel } from "@/components/EntityPanel";
-import { VoiceIndicator } from "@/components/VoiceIndicator";
-import { LiveTranscript } from "@/components/LiveTranscript";
-import { VeenaLogo } from "@/components/VeenaLogo";
-import { getWelcome, queryVeena } from "@/lib/api";
-import { useVoiceAgent, CustomerData } from "@/hooks/useVoiceAgent";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
+// Voice State Interface
+export interface VoiceState {
+  isListening: boolean;
+  isSpeaking: boolean;
+  isProcessing: boolean;
+  isWakeWordActive: boolean;
+  voiceReady: boolean;
+  currentTranscript: string;
+  confidence?: number;
+}
 
-export default function VeenaAutonomousAgent() {
-  const [isClient, setIsClient] = useState(false);
-  const [messages, setMessages] = useState<{ role: string; text: string }[]>([]);
-  const [greeted, setGreeted] = useState(false);
-  const userId = "demo_user";
+// Customer Data Interface
+export interface CustomerData {
+  fullName?: string;
+  policyNumber?: string;
+  premium?: string;
+  paymentDate?: string;
+  paymentMode?: string;
+  phoneNumber?: string;
+  email?: string;
+  [key: string]: any;
+}
 
-  const {
+// Helper: SpeechRecognition Polyfill
+const getSpeechRecognition = (): typeof window.SpeechRecognition | null => {
+  return (
+    (typeof window !== "undefined" &&
+      (window.SpeechRecognition || window.webkitSpeechRecognition)) ||
+    null
+  );
+};
+
+// Custom Hook
+function useVoiceAgent() {
+  // State
+  const [voiceState, setVoiceState] = useState<VoiceState>({
+    isListening: false,
+    isSpeaking: false,
+    isProcessing: false,
+    isWakeWordActive: true,
+    voiceReady: true,
+    currentTranscript: "",
+  });
+  const [customerData, setCustomerData] = useState<CustomerData>({});
+  const [currentLanguage, setCurrentLanguage] = useState("en");
+  const [metrics, setMetrics] = useState({ averageLatency: 0, totalTurns: 0 });
+
+  // for speech instance persistence
+  const recognitionRef = useRef<any>(null);
+
+  // Language Switcher
+  const changeLanguage = (lang: string) => setCurrentLanguage(lang);
+
+  // Listening Trigger
+  const startListening = useCallback(() => {
+    const SpeechRecognition = getSpeechRecognition();
+    if (!SpeechRecognition) {
+      alert(
+        "Your browser does not support Speech Recognition. Try Chrome or Edge."
+      );
+      return;
+    }
+
+    if (recognitionRef.current) {
+      // safety: stop previous session if any
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = currentLanguage === "en" ? "en-US" : currentLanguage;
+    recognition.continuous = false;
+    recognition.interimResults = true;
+
+    recognition.onstart = () => {
+      setVoiceState((vs) => ({
+        ...vs,
+        isListening: true,
+        isWakeWordActive: false,
+        isProcessing: false,
+        currentTranscript: "",
+      }));
+    };
+
+    recognition.onresult = (event: any) => {
+      const transcript = Array.from(event.results)
+        .map((res: any) => res[0].transcript)
+        .join("");
+      setVoiceState((vs) => ({
+        ...vs,
+        currentTranscript: transcript,
+        confidence: event.results[0][0].confidence,
+      }));
+      if (event.results[0].isFinal) {
+        setVoiceState((vs) => ({
+          ...vs,
+          isListening: false,
+          isProcessing: true,
+          currentTranscript: transcript,
+        }));
+      }
+    };
+
+    recognition.onerror = (event: any) => {
+      setVoiceState((vs) => ({
+        ...vs,
+        isListening: false,
+        isProcessing: false,
+      }));
+      recognition.stop();
+    };
+
+    recognition.onend = () => {
+      setVoiceState((vs) => ({
+        ...vs,
+        isListening: false,
+        isProcessing: false,
+      }));
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+  }, [currentLanguage]);
+
+  // Conversation Reset
+  const resetConversation = () => {
+    setVoiceState((vs) => ({
+      ...vs,
+      isListening: false,
+      isProcessing: false,
+      isWakeWordActive: true,
+      currentTranscript: "",
+    }));
+    setCustomerData({});
+    setMetrics({ averageLatency: 0, totalTurns: 0 });
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+  };
+
+  // Mock Wakeword Handler
+  const handleInterruption = () => {
+    setVoiceState((vs) => ({
+      ...vs,
+      isListening: false,
+      isProcessing: false,
+      isWakeWordActive: true,
+    }));
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+  };
+
+  return {
     voiceState,
     customerData,
     setCustomerData,
+    currentLanguage,
+    changeLanguage,
+    metrics,
+    setMetrics,
+    resetConversation,
+    handleInterruption,
+    startListening,
+  };
+}
+
+// Main Page Component
+export default function VoiceAssistantPage() {
+  const {
+    voiceState,
+    customerData,
     currentLanguage,
     changeLanguage,
     metrics,
@@ -34,188 +183,118 @@ export default function VeenaAutonomousAgent() {
     startListening,
   } = useVoiceAgent();
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (
-      voiceState.isWakeWordActive &&
-      voiceState.voiceReady &&
-      !greeted
-    ) {
-      const name = customerData?.fullName?.trim() || "Sir/Madam";
-      getWelcome(currentLanguage, userId, name)
-        .then((res) => {
-          setMessages((m) => [...m, { role: "assistant", text: res.response }]);
-          setGreeted(true);
-          if (res.audio_url) {
-            const audio = new Audio(res.audio_url);
-            audio.onended = () => {
-              if (!voiceState.isListening) {
-                startListening();
-              }
-            };
-            audio.onerror = () => {
-              if (!voiceState.isListening) {
-                startListening();
-              }
-            };
-            audio.play().catch(() => {
-              if (!voiceState.isListening) {
-                startListening();
-              }
-            });
-          }
-        })
-        .catch(console.error);
-    }
-  }, [
-    voiceState.isWakeWordActive,
-    voiceState.voiceReady,
-    currentLanguage,
-    customerData?.fullName,
-    startListening,
-    greeted,
-  ]);
-
-  const buildQuery = (data: Partial<CustomerData>): string => {
-    const fields: string[] = [];
-    if (data.fullName) fields.push(`My name is ${data.fullName}`);
-    if (data.policyNumber) fields.push(`My policy number is ${data.policyNumber}`);
-    if (data.premium) fields.push(`Premium is ${data.premium}`);
-    if (data.paymentDate) fields.push(`Due date is ${data.paymentDate}`);
-    if (data.paymentMode) fields.push(`Payment mode is ${data.paymentMode}`);
-    if (data.phoneNumber) fields.push(`Phone number is ${data.phoneNumber}`);
-    if (data.email) fields.push(`Email is ${data.email}`);
-    return fields.join(". ") + ".";
-  };
-
-  const handleSubmit = async () => {
-    const query = buildQuery(customerData);
-    if (!query.trim()) return;
-
-    try {
-      const res = await queryVeena({ text: query, userId, customerData });
-      setMessages((m) => [
-        ...m,
-        { role: "user", text: query },
-        { role: "assistant", text: res.response },
-      ]);
-      if (res.audio_url) {
-        const audio = new Audio(res.audio_url);
-        audio.onended = () => startListening();
-        audio.onerror = () => startListening();
-        audio.play().catch(() => startListening());
-      } else {
-        startListening();
-      }
-    } catch (err) {
-      console.error("Submit error:", err);
-      startListening();
-    }
-  };
-
-  const handleReset = () => {
-    setMessages([]);
-    setCustomerData({});
-    setGreeted(false);
-    resetConversation();
-  };
-
-  if (!isClient) return <div>Loading Veena…</div>;
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white flex flex-col">
-      {/* Header */}
-      <div className="flex justify-between items-center px-6 py-4">
-        <div className="mx-auto">
-          <VeenaLogo />
+    <div className="min-h-screen bg-gray-100 p-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold text-center mb-8">Voice Assistant</h1>
+        
+        {/* Status Display */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">Status</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className={`p-3 rounded ${voiceState.isListening ? 'bg-green-100' : 'bg-gray-100'}`}>
+              <div className="text-sm text-gray-600">Listening</div>
+              <div className="font-semibold">{voiceState.isListening ? 'Active' : 'Inactive'}</div>
+            </div>
+            <div className={`p-3 rounded ${voiceState.isProcessing ? 'bg-yellow-100' : 'bg-gray-100'}`}>
+              <div className="text-sm text-gray-600">Processing</div>
+              <div className="font-semibold">{voiceState.isProcessing ? 'Active' : 'Inactive'}</div>
+            </div>
+            <div className={`p-3 rounded ${voiceState.isWakeWordActive ? 'bg-blue-100' : 'bg-gray-100'}`}>
+              <div className="text-sm text-gray-600">Wake Word</div>
+              <div className="font-semibold">{voiceState.isWakeWordActive ? 'Active' : 'Inactive'}</div>
+            </div>
+            <div className={`p-3 rounded ${voiceState.voiceReady ? 'bg-green-100' : 'bg-red-100'}`}>
+              <div className="text-sm text-gray-600">Voice Ready</div>
+              <div className="font-semibold">{voiceState.voiceReady ? 'Ready' : 'Not Ready'}</div>
+            </div>
+          </div>
         </div>
-        <div className="ml-auto w-[160px]">
-          <Select value={currentLanguage} onValueChange={changeLanguage}>
-            <SelectTrigger className="bg-gray-800 text-white border-white">
-              <SelectValue placeholder="Language" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="en">English</SelectItem>
-              <SelectItem value="hi">Hindi</SelectItem>
-              <SelectItem value="mr">Marathi</SelectItem>
-              <SelectItem value="gu">Gujarati</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
 
-      {/* Top Metrics */}
-      <div className="text-sm text-gray-400 flex justify-between items-center px-6 py-1">
-        <div>
-          Status: <span className="text-purple-400 font-semibold">Say "Hey Veena"</span>
+        {/* Controls */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">Controls</h2>
+          <div className="flex flex-wrap gap-4">
+            <button
+              onClick={startListening}
+              disabled={voiceState.isListening}
+              className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
+            >
+              {voiceState.isListening ? 'Listening...' : 'Start Listening'}
+            </button>
+            
+            <button
+              onClick={resetConversation}
+              className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Reset Conversation
+            </button>
+            
+            <button
+              onClick={handleInterruption}
+              className="px-6 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700"
+            >
+              Stop/Interrupt
+            </button>
+            
+            <select
+              value={currentLanguage}
+              onChange={(e) => changeLanguage(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded"
+            >
+              <option value="en">English</option>
+              <option value="es">Spanish</option>
+              <option value="fr">French</option>
+              <option value="de">German</option>
+            </select>
+          </div>
         </div>
-        <div>Avg Latency: {metrics.averageLatency.toFixed(0)}ms</div>
-        <div>Turns: {metrics.totalTurns}</div>
-        <div>Language: {currentLanguage.toUpperCase()}</div>
-      </div>
 
-      {/* Main */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Chat */}
-        <div className="flex-1 p-6 flex flex-col justify-between overflow-y-auto">
-          <div className="space-y-3 overflow-y-auto flex-1">
-            {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`w-fit max-w-xl ${
-                  msg.role === "user" ? "ml-auto" : "mr-auto"
-                }`}
-              >
-                <div
-                  className={`p-3 rounded-md font-mono text-sm ${
-                    msg.role === "user"
-                      ? "bg-blue-900 text-blue-300"
-                      : "bg-green-900 text-green-300"
-                  }`}
-                >
-                  <strong>{msg.role.toUpperCase()}:</strong> {msg.text}
+        {/* Current Transcript */}
+        {voiceState.currentTranscript && (
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 className="text-xl font-semibold mb-4">Current Transcript</h2>
+            <div className="bg-gray-50 p-4 rounded border">
+              <p className="text-gray-800">{voiceState.currentTranscript}</p>
+              {voiceState.confidence && (
+                <p className="text-sm text-gray-600 mt-2">
+                  Confidence: {Math.round(voiceState.confidence * 100)}%
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Customer Data */}
+        {Object.keys(customerData).length > 0 && (
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 className="text-xl font-semibold mb-4">Customer Data</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {Object.entries(customerData).map(([key, value]) => (
+                <div key={key} className="border-b pb-2">
+                  <div className="text-sm text-gray-600 capitalize">{key.replace(/([A-Z])/g, ' $1')}</div>
+                  <div className="font-semibold">{value}</div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-          <div className="mt-4 flex gap-4">
-            <Button onClick={handleSubmit}>Submit</Button>
-            <Button variant="outline" onClick={handleReset}>
-              Reset
-            </Button>
+        )}
+
+        {/* Metrics */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-xl font-semibold mb-4">Metrics</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <div className="text-sm text-gray-600">Average Latency</div>
+              <div className="font-semibold">{metrics.averageLatency}ms</div>
+            </div>
+            <div>
+              <div className="text-sm text-gray-600">Total Turns</div>
+              <div className="font-semibold">{metrics.totalTurns}</div>
+            </div>
           </div>
         </div>
-
-        {/* Right panel */}
-        <div className="w-[400px] border-l border-gray-700 p-4 bg-black">
-          <EntityPanel
-            customerData={customerData}
-            onUpdateCustomerData={setCustomerData}
-            metrics={metrics}
-          />
-        </div>
       </div>
-
-      {/* Voice Mic & Transcript */}
-      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
-        <VoiceIndicator
-          isListening={voiceState.isListening}
-          isSpeaking={voiceState.isSpeaking}
-          isProcessing={voiceState.isProcessing}
-          isWakeWordActive={voiceState.isWakeWordActive}
-          onInterrupt={handleInterruption}
-          onMicClick={startListening}
-        />
-      </div>
-
-      <LiveTranscript
-        currentTranscript={voiceState.currentTranscript}
-        confidence={voiceState.confidence}
-        isListening={voiceState.isListening}
-      />
     </div>
   );
 }
